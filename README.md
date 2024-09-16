@@ -1,9 +1,9 @@
 # INSTRUÇÕES PARA A MANIPULAÇÃO DO PROJETO
 
 1. O presente projeto foi programado em TypeScript, mas possui scripts para sua compilação em JavaScript caso necessário.
-2. Primeiro certifique-se de ter todo as dependências do programa instalados, para isso utilize o comando `npm i` que irá automaticamente fazer o download de todas as dependências necessárias baseado no package.json.
+2. Primeiro certifique-se de ter todas as dependências do programa instalados, para isso utilize o comando `npm i` que irá automaticamente fazer o download de todas as dependências necessárias baseado no package.json.
 3. Com base nos scripts que fiz para executar o programa, existem 3 scripts: dev, build e start.
-4. `npm run dev` Irá executar um script com nodemon, é um pacote que permite hot-reload to programa a cada vez que uma alteração é feita no código, recomendo utilizar esse script.
+4. `npm run dev` Irá executar um script com nodemon, é um pacote que permite hot-reload do programa a cada vez que uma alteração é feita no código, recomendo utilizar esse script.
 5. `npm run build` Vai compilar o código TypeScript para JavaScript, mas não irá executa-lo.
 6. `npm run start` Vai executar o código JavaScript, porém precisa ser compilado primeiro com `npm run build`.
 7. A memória persistente do projeto se baseia em um arquivo .json chamado **chart.json**, não apague ele sob quaisquer circunstâncias.
