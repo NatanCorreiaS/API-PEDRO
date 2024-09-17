@@ -28,8 +28,15 @@ fs.readFile("chart.json", "utf8", (err, data) => {
 
 // CRUD methods
 
+const sumAllPrices = (chartArray: Chart[]): Number => {
+  return chartArray.reduce(
+    (acc, chart) => Number(acc) + Number(chart.getPrice()),
+    0
+  );
+};
+
 app.get("/api/", (req, res) => {
-  res.send({ chart: chartArray });
+  res.send({ chart: chartArray, total: sumAllPrices(chartArray) });
 });
 
 // Method GET: get a chart by ID
