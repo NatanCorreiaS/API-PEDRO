@@ -1,6 +1,7 @@
 import express from "express";
 import Chart from "./Chart";
 import fs from "fs";
+import path from "path";
 
 const app = express();
 
@@ -34,6 +35,38 @@ const sumAllPrices = (chartArray: Chart[]): Number => {
     0
   );
 };
+
+// Serving index page ../www/index.html
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../www/index.html"));
+
+  console.log(
+    "Arquivo enviado com sucesso: ",
+    path.join(__dirname, "../www/index.html")
+  );
+});
+
+// Serving css file ../www/style.css
+app.get("/style.css", (req, res) => {
+  res.sendFile(path.join(__dirname, "../www/style.css"));
+
+  console.log(
+    "Arquivo enviado com sucesso: ",
+    path.join(__dirname, "../www/style.css")
+  );
+});
+
+// Serving js file ../www/script/manipulator.js
+app.get("/manipulator.js", (req, res) => {
+  res.sendFile(path.join(__dirname, "../www/manipulator.js"));
+  console.log(
+    "Arquivo enviado com sucesso: ",
+    path.join(__dirname, "../www/manipulator.js")
+  );
+});
+
+// Serving all the imgs in the ../www/img folder
+app.use("/img", express.static(path.join(__dirname, "../www/img")));
 
 app.get("/api/", (req, res) => {
   res.send({ chart: chartArray, total: sumAllPrices(chartArray) });
