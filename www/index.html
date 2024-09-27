@@ -4,6 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <title>API - CARRINHO</title>
   </head>
   <body>
@@ -14,7 +21,7 @@
     </header>
     <main>
       <div id="main-container" class="main-container">
-        <div class="item">
+        <div id="arroz" class="item">
           <img src="./img/arroz.png" alt="Imagem" />
           <h3 class="item-name">Arroz Parbolizado Camil</h3>
           <p class="description">
@@ -22,37 +29,37 @@
           </p>
           <h4 class="price">R$6.99</h4>
         </div>
-        <div class="item">
+        <div id="elden-ring" class="item">
           <img src="./img/elden-ring.png" alt="Imagem" />
           <h3 class="item-name">Elden Ring</h3>
           <p class="description">Elden Ring, jogo souls-like para PS4!</p>
           <h4 class="price">R$200.00</h4>
         </div>
-        <div class="item">
+        <div id="feijao" class="item">
           <img src="./img/feijao.png" alt="Imagem" />
           <h3 class="item-name">Feijao</h3>
           <p class="description">Feijao preto Camil, o melhor do estado!</p>
           <h4 class="price">R$5.99</h4>
         </div>
-        <div class="item">
+        <div id="leite-condensado" class="item">
           <img src="./img/leite-condensado.png" alt="Imagem" />
           <h3 class="item-name">Leite Condensado Mococa</h3>
           <p class="description">A tradicional!</p>
           <h4 class="price">R$5.99</h4>
         </div>
-        <div class="item">
+        <div id="macbook" class="item">
           <img src="./img/macbook.png" alt="Imagem" />
           <h3 class="item-name">MacBook Air 3</h3>
           <p class="description">O melhor da Apple com chipset ARM!</p>
           <h4 class="price">R$4200.45</h4>
         </div>
-        <div class="item">
+        <div id="positivo" class="item">
           <img src="./img/positivo.png" alt="Imagem" />
           <h3 class="item-name">Notebook Negativo</h3>
           <p class="description">A bomba brasileira!</p>
           <h4 class="price">R$500.00</h4>
         </div>
-        <div class="item">
+        <div id="ps2" class="item">
           <img src="./img/ps2.png" alt="Imagem" />
           <h3 class="item-name">Playstation 2</h3>
           <p class="description">
@@ -60,7 +67,7 @@
           </p>
           <h4 class="price">R$700.00</h4>
         </div>
-        <div class="item">
+        <div id="ps5" class="item">
           <img src="./img/ps5.png" alt="Imagem" />
           <h3 class="item-name">Playstation 5</h3>
           <p class="description">
@@ -68,14 +75,33 @@
           </p>
           <h4 class="price">R$3999.99</h4>
         </div>
-        <div class="item">
+        <div id="tv-roku" class="item">
           <img src="./img/tv-roku.png" alt="Imagem" />
           <h3 class="item-name">TV AOC Roku</h3>
           <p class="description">Aquela que cabe no seu bolso!</p>
           <h4 class="price">R$999.99</h4>
         </div>
       </div>
-      <div id="chart-offcanvas" class="chart-offcanvas"></div>
+      <div id="chart-offcanvas" class="chart-offcanvas">
+        <h2>Carrinho</h2>
+        <h3 id="total-price" class="total-price">
+          Total: <span id="total-price-number">R$6.99</span>
+        </h3>
+        <div id="chart-container" class="chart-container">
+          <div class="chart-item">
+            <img src="./img/arroz.png" alt="Imagem" />
+            <h3 class="chart-item-name">Arroz Parbolizado Camil</h3>
+            <h4 class="chart-price">R$6.99</h4>
+            <div class="add-remove-container">
+              <i class="fa-solid fa-plus"></i>
+              <i class="fa-solid fa-minus"></i>
+            </div>
+            <p class="chart-quantity">
+              Quantidade: <span id="quantity-number">1</span>
+            </p>
+          </div>
+        </div>
+      </div>
     </main>
     <footer>
       <div class="logo">

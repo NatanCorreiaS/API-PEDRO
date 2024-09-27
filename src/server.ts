@@ -11,6 +11,10 @@ const PORT = 8000;
 let chartArray: Chart[] = [];
 
 // Function to map plain objects to instances of the Chart class
+
+try {
+} catch (error) {}
+
 const loadCharts = (data: any[]): Chart[] => {
   return data.map(
     (item) => new Chart(item.id, item.productName, item.price, item.quantity)
