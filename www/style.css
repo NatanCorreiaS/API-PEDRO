@@ -152,6 +152,12 @@ main {
   right: 0;
 }
 
+.add-remove-container {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
 footer {
   background-color: rgb(51, 51, 250);
   color: #fff;
