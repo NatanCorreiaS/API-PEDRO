@@ -164,6 +164,6 @@ app.delete("/api/:id", async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(
-    `Server is running on port http://localhost:${PORT}/api/ to list all charts`
+    `Server is running on port http://localhost:${PORT}/ for the front-end and http://localhost:${PORT}/api/ for the back-end`
   );
 });
