@@ -3,7 +3,7 @@
 1. O presente projeto foi programado em TypeScript, mas possui scripts para sua compilação em JavaScript caso necessário.
 2. Primeiro certifique-se de ter todas as dependências do programa instalados, para isso utilize o comando `npm i` que irá automaticamente fazer o download de todas as dependências necessárias baseado no package.json.
 3. Com base nos scripts que fiz para executar o programa, escrevi um script de compilação do código para javascript e execução automática, utilize o comando `npm run compile:start` para compilar e executar o programa.
-4. A página responsável por todo o CRUD estará em `localhost:8000/`.
+4. A página responsável por todo o CRUD estará em `http://localhost:8000/`.
 5. Este programa é um app monolítico, ambos o backend e frontend estão servidos pelo mesmo repositório
 6. Se tudo correr bem essa será a aparência da página inicial, ![inicio](./docs/inicio.png)
 7. Ao clicar em um produto, um offcanvas irá aparecer na tela, com o produto selecionado, o total e a quantidade, ![produto-1](./docs/tocar-produto.png)
