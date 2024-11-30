@@ -1,6 +1,6 @@
 import express from "express";
 import Chart, { ChartCRUD } from "./Chart";
-import fs from "fs/promises";
+// import fs from "fs/promises";
 import path from "path";
 import { MongoClient, ObjectId, ServerApiVersion } from "mongodb";
 import dotenv from "dotenv";
@@ -281,8 +281,10 @@ app.delete("/api/:productName", async (req, res) => {
   // }
 });
 
-app.listen(PORT, () => {
+const HOSTNAME = process.env.HOSTNAME || 'localhost';
+
+app.listen(Number(PORT), HOSTNAME, () => {
   console.log(
-    `Server is running on port http://localhost:${PORT}/ for the front-end and http://localhost:${PORT}/api/ for the back-end`
+    `Server is running on http://${HOSTNAME}:${PORT}/ for the front-end and http://${HOSTNAME}:${PORT}/api/ for the back-end`
   );
 });
