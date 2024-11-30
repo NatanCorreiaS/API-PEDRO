@@ -47,12 +47,15 @@ testConnection();
 
 const app = express();
 
+app.use(
+  cors({
+    origin: "*", // This allows requests from any origin
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
-app.use(cors({
-  origin: '*', // This allows requests from any origin
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.options("*", cors()); // Enable pre-flight
 
 // ... other routes and middleware
 
@@ -291,7 +294,7 @@ app.delete("/api/:productName", async (req, res) => {
   // }
 });
 
-const HOSTNAME = process.env.HOSTNAME || 'localhost';
+const HOSTNAME = process.env.HOSTNAME || "localhost";
 
 app.listen(Number(PORT), HOSTNAME, () => {
   console.log(
