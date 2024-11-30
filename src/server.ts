@@ -47,15 +47,9 @@ testConnection();
 
 const app = express();
 
-app.use(
-  cors({
-    origin: "*", // This allows requests from any origin
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+app.use(cors());
 
-app.options("*", cors()); // Enable pre-flight
+// app.options("*", cors()); // Enable pre-flight
 
 // ... other routes and middleware
 
