@@ -2,7 +2,7 @@ const chartOffcanvas = document.getElementById("chart-offcanvas");
 const listItems = document.querySelectorAll(".item");
 const totalPriceNumber = document.querySelector("#total-price-number");
 
-const API = "http://localhost:8000/api";
+const API = "https://api-pedro-production.up.railway.app/api";
 
 // Cria um elemento de popup de sucesso
 function createSuccessPopup(message) {
