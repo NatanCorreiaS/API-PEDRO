@@ -14,6 +14,10 @@ const DB_NAME = "ecommerce_database";
 const COLLECTION_NAME = "ecommerce";
 const PORT = process.env.PORT;
 
+const app = express();
+// Allowing all origins to access the API
+app.use(cors({ origin: "*" }));
+
 // Verifying if the PORT is valid
 if (!PORT) {
   throw new Error("Please provide a valid PORT");
@@ -44,11 +48,6 @@ const testConnection = async () => {
 };
 
 testConnection();
-
-const app = express();
-
-// Allowing all origins to access the API
-app.use(cors({ origin: '*' }));
 
 // app.options("*", cors()); // Enable pre-flight
 
