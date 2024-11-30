@@ -13,10 +13,11 @@
   },
   "name": "pedro-api",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "dist/server.js",
   "scripts": {
     "dev": "nodemon src/server.ts",
-    "compile:start": "tsc && node dist/server.js"
+    "compile:start": "npx tsc && node dist/server.js",
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
