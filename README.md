@@ -1,4 +1,5 @@
-# INSTRUÇÕES PARA A MANIPULAÇÃO DO PROJETO v2 (FRONTEND e BACKEND)
+# INSTRUÇÕES PARA A MANIPULAÇÃO DO PROJETO v3 (FRONTEND e BACKEND)
+## FOI SUBSTITUIDO O ID PELO PRODUCTNAME DEVIDO AO ID DO MONGODB SER MUITO LONGO E GERADO AUTOMATICAMENTE
 
 1. O presente projeto foi programado em TypeScript, mas possui scripts para sua compilação em JavaScript caso necessário.
 2. Primeiro certifique-se de ter todas as dependências do programa instalados, para isso utilize o comando `npm i` que irá automaticamente fazer o download de todas as dependências necessárias baseado no package.json.
@@ -18,7 +19,7 @@
 
 1. O projeto utiliza de requisitos de parâmetros e requisitos de corpo de conteúdo(JSON).
 2. MÉTODO GET para visualizar todos os produtos do carrinho, utilize o endereço `http://localhost:8000/api/`.
-3. MÉTODO GET para visualizar apenas uma compra específica do carrinho, nesta será utilizada requisitos de parâmetro com a propriedade do id, como por exemplo `http://localhost:8000/api/{id}`, substituindo o `{id}`por um número que corresponda a um produto do carrinho.
+3. MÉTODO GET para visualizar apenas uma compra específica do carrinho, nesta será utilizada requisitos de parâmetro com a propriedade do id, como por exemplo `http://localhost:8000/api/{productName}`, substituindo o `{productName}`pelo nome que corresponda a um produto do carrinho.
 4. MÉTODO POST para criar um produto e coloca-lo no carrinho, o endereço é `http://localhost:8000/api` , nesta será utilizada requisitos de corpo, da seguinte maneira:
 
 ```json
@@ -34,7 +35,7 @@
 ]
 ```
 
-5. MÉTODO PUT para atualizar os dados de um produto, será utilizado tanto os requisitos de parâmetros como os requisitos de corpo neste método, o endereço é `http://localhost:8000/api/{id}`, substituindo o `{id}`pelo identificador do produto, em seguida deve-se definir as propriedades que serão atualizadas no corpo da requisição como:
+5. MÉTODO PUT para atualizar os dados de um produto, será utilizado tanto os requisitos de parâmetros como os requisitos de corpo neste método, o endereço é `http://localhost:8000/api/{productName}`, substituindo o `{productName}`pelo nome do produto, em seguida deve-se definir as propriedades que serão atualizadas no corpo da requisição como:
 
 ```json
 [
@@ -49,4 +50,4 @@
 ]
 ```
 
-6. MÉTODO DELETE, será utilizado somente os requisitos de parâmetros como no método GET para solicitar somente um produto, utiliza-se o endereço `http://localhost:8000/api/{id}`, substitua o `{id}`pelo identificador do produto, o produto será deletado e receberá uma mensagem de sucesso ou falha.
+6. MÉTODO DELETE, será utilizado somente os requisitos de parâmetros como no método GET para solicitar somente um produto, utiliza-se o endereço `http://localhost:8000/api/{PRODUCTnAME}`, substitua o `{productName}`pelo nome do produto, o produto será deletado e receberá uma mensagem de sucesso ou falha.
