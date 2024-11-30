@@ -1,18 +1,20 @@
+import { ObjectId } from "mongodb";
+
 export default class Chart {
   // Properties
-  private id: Number;
+  private _id: ObjectId;
   private productName: String;
   private price: Number;
   private quantity: Number;
 
   // Constructor
   constructor(
-    id: Number,
+    _id: ObjectId,
     productName: String,
     price: Number,
     quantity: Number
   ) {
-    this.id = id;
+    this._id = _id;
     this.productName = productName;
     this.price = price;
     this.quantity = quantity;
@@ -20,16 +22,52 @@ export default class Chart {
 
   // Formatted data method
   public getProduct(): String {
-    return `ID: ${this.id}, Product Name: ${this.productName}, Price: ${this.price}, Quantity: ${this.quantity}`;
+    return `ID: ${this._id}, Product Name: ${this.productName}, Price: ${this.price}, Quantity: ${this.quantity}`;
   }
 
   // Getters and Setters
-  public getId(): Number {
-    return this.id;
+  public getId(): ObjectId {
+    return this._id;
   }
 
-  public setId(id: Number): void {
-    this.id = id;
+  public setId(_id: ObjectId): void {
+    this._id = _id;
+  }
+
+  public getProductName(): String {
+    return this.productName;
+  }
+
+  public setProductName(productName: String): void {
+    this.productName = productName;
+  }
+
+  public getPrice(): Number {
+    return this.price;
+  }
+
+  public setPrice(price: Number): void {
+    this.price = price;
+  }
+
+  public getQuantity(): Number {
+    return this.quantity;
+  }
+
+  public setQuantity(quantity: Number): void {
+    this.quantity = quantity;
+  }
+}
+
+export class ChartCRUD {
+  private productName: String;
+  private price: Number;
+  private quantity: Number;
+
+  constructor(productName: String, price: Number, quantity: Number) {
+    this.productName = productName;
+    this.price = price;
+    this.quantity = quantity;
   }
 
   public getProductName(): String {

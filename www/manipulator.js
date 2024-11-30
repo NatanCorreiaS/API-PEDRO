@@ -84,7 +84,7 @@ const updateItemQuantity = async (productName, quantityChange) => {
 
     const newQuantity = itemData.quantity + quantityChange;
 
-    const response = await fetch(`${API}/${itemData.id}`, {
+    const response = await fetch(`${API}/${itemData.productName}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -149,7 +149,7 @@ const deleteItemFromBackend = async (productName) => {
     const items = await fetchItems();
     const itemData = items.find((item) => item.productName === productName);
     if (itemData) {
-      await fetch(`${API}/${itemData.id}`, {
+      await fetch(`${API}/${itemData.productName}`, {
         method: "DELETE",
       });
       console.log("Item removido");
