@@ -4,6 +4,7 @@ import Chart, { ChartCRUD } from "./Chart";
 import path from "path";
 import { MongoClient, ObjectId, ServerApiVersion } from "mongodb";
 import dotenv from "dotenv";
+import cors from "cors";
 
 // Permitindo o uso de variáveis de ambiente
 dotenv.config();
@@ -45,6 +46,15 @@ const testConnection = async () => {
 testConnection();
 
 const app = express();
+
+
+app.use(cors({
+  origin: '*', // This allows requests from any origin
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// ... other routes and middleware
 
 // Array of chart data
 let chartArray: Chart[] = [];
