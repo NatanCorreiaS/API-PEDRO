@@ -47,7 +47,8 @@ testConnection();
 
 const app = express();
 
-app.use(cors());
+// Allowing all origins to access the API
+app.use(cors({ origin: '*' }));
 
 // app.options("*", cors()); // Enable pre-flight
 
