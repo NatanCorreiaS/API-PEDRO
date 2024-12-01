@@ -1,34 +1,39 @@
-import express from "express";
-import Chart, { ChartCRUD } from "./Chart";
-// import fs from "fs/promises";
+import express, { Request, Response } from "express";
 import path from "path";
-import { MongoClient, ObjectId, ServerApiVersion } from "mongodb";
+import {
+  MongoClient,
+  Db,
+  Collection,
+  ServerApiVersion,
+  Document,
+} from "mongodb";
 import dotenv from "dotenv";
 import cors from "cors";
+import Chart, { ChartCRUD } from "./Chart";
 
 // Permitindo o uso de variáveis de ambiente
 dotenv.config();
 
-const URI = process.env.MONGO_URI;
+const URI = process.env.MONGO_URI!;
 const DB_NAME = "ecommerce_database";
 const COLLECTION_NAME = "ecommerce";
-const PORT = process.env.PORT;
+const PORT = process.env.PORT!;
 
 const app = express();
 // Allowing all origins to access the API
 app.use(cors({ origin: "*" }));
 
-// Verifying if the PORT is valid
+// Verificando se o PORT é válido
 if (!PORT) {
   throw new Error("Please provide a valid PORT");
 }
 
-// Verifying if the URI is valid
+// Verificando se o URI é válido
 if (!URI) {
   throw new Error("Please provide a valid URI");
 }
 
-// Establishing connection to the database
+// Estabelecendo a conexão com o banco de dados MongoDB
 const client = new MongoClient(URI, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -37,71 +42,47 @@ const client = new MongoClient(URI, {
   },
 });
 
-// testing connection
-const testConnection = async () => {
-  try {
+// Garantir que a conexão com o MongoDB será estabelecida uma vez no início
+let db: Db | null = null;
+
+const connectDB = async (): Promise<Db> => {
+  if (!db) {
     await client.connect();
-    console.log("Connected to the database");
-  } catch (err) {
-    console.error(err);
+    db = client.db(DB_NAME);
+    console.log("Conexão com MongoDB estabelecida!");
   }
+  return db;
 };
 
-testConnection();
-
-// app.options("*", cors()); // Enable pre-flight
-
-// ... other routes and middleware
-
-// Array of chart data
+// Array de dados de gráficos
 let chartArray: Chart[] = [];
 
-// Loading the data from the database to the chartArray
-const loadChartData = async () => {
+// Carregar os dados de gráfico do banco de dados ao iniciar o servidor
+const loadChartData = async (): Promise<void> => {
   try {
-    const db = client.db(DB_NAME);
-    const collection = db.collection(COLLECTION_NAME);
+    const db = await connectDB();
+    const collection: Collection = db.collection(COLLECTION_NAME);
     const charts = await collection.find({}).toArray();
     chartArray = charts.map(
-      (chart) =>
+      (chart: Document) =>
         new Chart(chart._id, chart.productName, chart.price, chart.quantity)
     );
   } catch (err) {
-    console.error(err);
+    console.error("Falha ao carregar dados de gráfico:", err);
   }
 };
 
-loadChartData();
+loadChartData().then(() => {
+  console.log("CHART ARRAY carregado: ", chartArray);
+});
 
-console.log("CHART ARRAY: ", chartArray);
-
-// Function to map plain objects to instances of the Chart class
-// const loadCharts = (data: any[]): Chart[] => {
-//   return data.map(
-//     (item) => new Chart(item.id, item.productName, item.price, item.quantity)
-//   );
-// };
-
-// Reading saved data from chart.json to load the data
-// const loadChartData = async () => {
-//   try {
-//     const data = await fs.readFile("chart.json", "utf8");
-//     const parsedData = JSON.parse(data);
-//     chartArray = loadCharts(parsedData); // Convert to chart instances
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
-
-// loadChartData();
-
-// CRUD methods
-const sumAllPrices = (chartArray: Chart[]): Number => {
+// Função para somar todos os preços
+const sumAllPrices = (chartArray: Chart[]): number => {
   return chartArray.reduce((acc, chart) => acc + Number(chart.getPrice()), 0);
 };
 
-// Serving index page ../www/index.html
-app.get("/", async (req, res) => {
+// Servir a página inicial
+app.get("/", async (req: Request, res: Response) => {
   try {
     await res.sendFile(path.join(__dirname, "../www/index.html"));
     console.log(
@@ -114,8 +95,8 @@ app.get("/", async (req, res) => {
   }
 });
 
-// Serving css file ../www/style.css
-app.get("/style.css", async (req, res) => {
+// Servir o arquivo CSS
+app.get("/style.css", async (req: Request, res: Response) => {
   try {
     await res.sendFile(path.join(__dirname, "../www/style.css"));
     console.log(
@@ -128,8 +109,8 @@ app.get("/style.css", async (req, res) => {
   }
 });
 
-// Serving js file ../www/script/manipulator.js
-app.get("/manipulator.js", async (req, res) => {
+// Servir o arquivo JS manipulator.js
+app.get("/manipulator.js", async (req: Request, res: Response) => {
   try {
     await res.sendFile(path.join(__dirname, "../www/manipulator.js"));
     console.log(
@@ -142,34 +123,27 @@ app.get("/manipulator.js", async (req, res) => {
   }
 });
 
-// Serving all the imgs in the ../www/img folder
+// Servir as imagens estáticas
 app.use("/img", express.static(path.join(__dirname, "../www/img")));
 
-app.get("/api/", async (req, res) => {
+// Rota API GET: buscar todos os gráficos
+app.get("/api/", async (req: Request, res: Response) => {
   try {
-    await client.connect();
-    const db = client.db(DB_NAME);
-    const collection = db.collection(COLLECTION_NAME);
+    const db = await connectDB();
+    const collection: Collection = db.collection(COLLECTION_NAME);
     const charts = await collection.find({}).toArray();
     res.send({ chart: charts, total: sumAllPrices(chartArray) });
   } catch (err) {
-    console.error(err);
+    console.error("Falha ao buscar gráficos:", err);
     res.status(500).send("Internal Server Error");
   }
-  // try {
-  //   res.send({ chart: chartArray, total: sumAllPrices(chartArray) });
-  // } catch (err) {
-  //   console.error(err);
-  //   res.status(500).send("Internal Server Error");
-  // }
 });
 
-// Method GET: get a chart by ID
-app.get("/api/:productName", async (req, res) => {
+// Rota API GET: buscar gráfico por nome do produto
+app.get("/api/:productName", async (req: Request, res: Response) => {
   try {
-    await client.connect();
-    const db = client.db(DB_NAME);
-    const collection = db.collection(COLLECTION_NAME);
+    const db = await connectDB();
+    const collection: Collection = db.collection(COLLECTION_NAME);
     const productName = req.params.productName;
     const chart = await collection.findOne({ productName });
     if (chart) {
@@ -177,115 +151,62 @@ app.get("/api/:productName", async (req, res) => {
     } else {
       res.status(404).send({ message: "Chart not found" });
     }
-  } finally {
-    await client.close();
+  } catch (err) {
+    console.error("Falha ao buscar gráfico:", err);
+    res.status(500).send("Internal Server Error");
   }
-
-  // try {
-  //   const id = Number(req.params.id);
-  //   const chart = chartArray.find((chart) => chart.getId() === id);
-  //   if (chart) {
-  //     res.send({ chart });
-  //   } else {
-  //     res.status(404).send({ message: "Chart not found" });
-  //   }
-  // } catch (err) {
-  //   console.error(err);
-  //   res.status(500).send("Internal Server Error");
-  // }
 });
 
-// Method POST: create a new chart and save it to chart.json
-app.post("/api/", express.json(), async (req, res) => {
+// Rota API POST: criar novo gráfico
+app.post("/api/", express.json(), async (req: Request, res: Response) => {
   try {
-    await client.connect();
+    const db = await connectDB();
     const { productName, price, quantity } = req.body;
-    const db = client.db(DB_NAME);
-    const collection = db.collection(COLLECTION_NAME);
+    const collection: Collection = db.collection(COLLECTION_NAME);
     const newChart = new ChartCRUD(productName, price, quantity);
     await collection.insertOne(newChart);
-    console.log("METHOD POST, CREATED NEW CHART: ", newChart);
+    console.log("Novo gráfico criado: ", newChart);
     res.send({ msg: "Chart created!", chart: newChart });
-  } finally {
-    await client.close();
+  } catch (err) {
+    console.error("Falha ao criar gráfico:", err);
+    res.status(500).send("Internal Server Error");
   }
-  // try {
-  //   const { productName, price, quantity } = req.body;
-  //   const id = new ObjectId(chartArray.length + 1);
-  //   const newChart = new Chart(id, productName, price, quantity);
-  //   chartArray.push(newChart);
-  //   await fs.writeFile("chart.json", JSON.stringify(chartArray));
-  //   console.log("METHOD POST, CREATED NEW CHART: ", newChart);
-  //   res.send({ msg: "Chart created!", chart: newChart });
-  // } catch (err) {
-  //   console.error(err);
-  //   res.status(500).send("Internal Server Error");
-  // }
 });
 
-// Method PUT: update a chart by ID and save it to chart.json
-app.put("/api/:productName", express.json(), async (req, res) => {
-  try {
-    await client.connect();
-    const productName = req.params.productName;
-    const { price, quantity } = req.body;
-    const db = client.db(DB_NAME);
-    const collection = db.collection(COLLECTION_NAME);
-    const updatedChart = new ChartCRUD(productName, price, quantity);
-    await collection.updateOne({ productName }, { $set: updatedChart });
-    console.log("METHOD PUT, UPDATED CHART: ", updatedChart);
-    res.send({ msg: "Chart Updated!", updatedChart });
-  } finally {
-    await client.close();
+// Rota API PUT: atualizar gráfico existente
+app.put(
+  "/api/:productName",
+  express.json(),
+  async (req: Request, res: Response) => {
+    try {
+      const db = await connectDB();
+      const productName = req.params.productName;
+      const { price, quantity } = req.body;
+      const collection: Collection = db.collection(COLLECTION_NAME);
+      const updatedChart = new ChartCRUD(productName, price, quantity);
+      await collection.updateOne({ productName }, { $set: updatedChart });
+      console.log("Gráfico atualizado: ", updatedChart);
+      res.send({ msg: "Chart Updated!", updatedChart });
+    } catch (err) {
+      console.error("Falha ao atualizar gráfico:", err);
+      res.status(500).send("Internal Server Error");
+    }
   }
-  // try {
-  //   const id = new ObjectId(req.params.id);
-  //   const { productName, price, quantity } = req.body;
-  //   const chart = chartArray.find((chart) => chart.getId() === id);
-  //   if (chart) {
-  //     chart.setProductName(productName);
-  //     chart.setPrice(price);
-  //     chart.setQuantity(quantity);
-  //     await fs.writeFile("chart.json", JSON.stringify(chartArray));
-  //     console.log("METHOD PUT, UPDATED CHART: ", chart);
-  //     res.send({ msg: "Chart Updated!", updatedChart: chart });
-  //   } else {
-  //     res.status(404).send({ message: "Chart not found" });
-  //   }
-  // } catch (err) {
-  //   console.error(err);
-  //   res.status(500).send("Internal Server Error");
-  // }
-});
+);
 
-// Method DELETE: delete a chart by ID and save it to chart.json
-app.delete("/api/:productName", async (req, res) => {
+// Rota API DELETE: deletar gráfico
+app.delete("/api/:productName", async (req: Request, res: Response) => {
   try {
-    await client.connect();
+    const db = await connectDB();
     const productName = req.params.productName;
-    const db = client.db(DB_NAME);
-    const collection = db.collection(COLLECTION_NAME);
+    const collection: Collection = db.collection(COLLECTION_NAME);
     await collection.deleteOne({ productName });
-    console.log("METHOD DELETE, DELETED CHART: ", productName);
+    console.log("Gráfico deletado: ", productName);
     res.send({ message: "Chart deleted" });
-  } finally {
-    await client.close();
+  } catch (err) {
+    console.error("Falha ao deletar gráfico:", err);
+    res.status(500).send("Internal Server Error");
   }
-  // try {
-  //   const id = new ObjectId(req.params.id);
-  //   const chartIndex = chartArray.findIndex((chart) => chart.getId() === id);
-  //   if (chartIndex !== -1) {
-  //     chartArray.splice(chartIndex, 1);
-  //     await fs.writeFile("chart.json", JSON.stringify(chartArray));
-  //     console.log("METHOD DELETE, DELETED CHART: ", id);
-  //     res.send({ message: "Chart deleted" });
-  //   } else {
-  //     res.status(404).send({ message: "Chart not found" });
-  //   }
-  // } catch (err) {
-  //   console.error(err);
-  //   res.status(500).send("Internal Server Error");
-  // }
 });
 
 const HOSTNAME = process.env.HOSTNAME || "localhost";
