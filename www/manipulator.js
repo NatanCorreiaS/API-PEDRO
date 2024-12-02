@@ -34,24 +34,6 @@ function createSuccessPopup(message) {
   }, 3000);
 }
 
-// The API have the following structure:
-/*
-id,
-productName,
-price,
-quantity
- */
-
-// const fetchItems = async () => {
-//   try {
-//     const response = await fetch(`${API}`);
-//     const data = await response.json();
-//     return data.chart;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
-
 const fetchItems = async () => {
   try {
     const response = await fetch(`${API}`);
@@ -104,24 +86,7 @@ const updateItemQuantity = async (productName, quantityChange) => {
   }
 };
 
-// const updateItemQuantity = async (productName, quantityChange) => {
-//   const items = await fetchItems();
-//   const itemData = items.find((item) => item.productName === productName);
-//   if (itemData) {
-//     const newQuantity = itemData.quantity + quantityChange;
-//     await fetch(`${API}/${itemData.id}`, {
-//       method: "PUT",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({ ...itemData, quantity: newQuantity }),
-//     });
-//     return newQuantity;
-//   }
-// };
-
 const createItemInBackend = async (itemName, price) => {
-  // Fetching if there's an item with the same name in the backend already
   const items = await fetchItems();
   const itemData = items.find((item) => item.productName === itemName);
   if (itemData) {
@@ -165,52 +130,45 @@ const deleteItemFromBackend = async (productName) => {
   }
 };
 
-// Reading all items from the backend and creating the chart items, the images will be picked from the list items, to get the image will compare the name from each item from item list and the name of the item in the backend
-// If the items are greather than 0, the offcanvas will be active
 const init = async () => {
   const items = await fetchItems();
-  const total = await fetchTotal();
+  let total = 0;
   items.forEach((item) => {
     const itemName = item.productName;
     const itemPrice = item.price;
     const itemQuantity = item.quantity;
-    // const itemImg = listItems
-    //   .find((item) => item.querySelector("h3").textContent.includes(itemName))
-    //   .querySelector("img").src;
-    listItems.forEach((item) => {
-      if (item.querySelector("h3").textContent.includes(itemName)) {
-        console.log(item.querySelector("img").src);
+    total += itemPrice * itemQuantity;
+
+    listItems.forEach((listItem) => {
+      if (listItem.querySelector("h3").textContent.includes(itemName)) {
+        console.log(listItem.querySelector("img").src);
 
         const chartItem = createChartItem({
           id: item.id,
-          img: item.querySelector("img").src,
+          img: listItem.querySelector("img").src,
           name: itemName,
           price: itemPrice,
           quantity: itemQuantity,
         });
 
         chartContainer.appendChild(chartItem);
-
-        const totalPrice = total;
-        totalPriceNumber.textContent = totalPrice.toFixed(2);
       }
     });
-
-    if (items.length > 0) {
-      chartOffcanvas.classList.add("active");
-      // createSuccessPopup("Itens carregados com sucesso!");
-    }
   });
+
+  totalPriceNumber.textContent = total.toFixed(2);
+
+  if (items.length > 0) {
+    chartOffcanvas.classList.add("active");
+  }
 };
 
 init();
 
-// offcanvas chart items
 const chartContainer = document.querySelector(".chart-container");
 const createChartItem = (item) => {
   const chartItem = document.createElement("div");
-  chartItem.classList.add("chart-item"); // add class to chart item
-  // Elements of chart item
+  chartItem.classList.add("chart-item");
   const chartImg = document.createElement("img");
   const chartItemName = document.createElement("h3");
   chartItemName.classList.add("chart-item-name");
@@ -220,7 +178,6 @@ const createChartItem = (item) => {
   const priceNumber = document.createElement("span");
   priceNumber.id = "price-number";
   const addRemoveContainer = document.createElement("div");
-  // Container with plus and minus buttons
   addRemoveContainer.classList.add("add-remove-container");
   const plusIcon = document.createElement("i");
   plusIcon.classList.add("fa-solid", "fa-plus");
@@ -231,7 +188,6 @@ const createChartItem = (item) => {
   chartQuantity.innerText = "Quantidade: ";
   const chartQuantityNumber = document.createElement("span");
   chartQuantityNumber.classList.add("quantity-number");
-  // Append elements to chart item
   chartItem.appendChild(chartImg);
   chartItem.appendChild(chartItemName);
   chartItem.appendChild(chartItemPrice);
@@ -251,7 +207,6 @@ const createChartItem = (item) => {
   return chartItem;
 };
 
-// Main event when the product is clicked
 listItems.forEach((item) => {
   item.addEventListener("click", async () => {
     chartOffcanvas.classList.add("active");
@@ -289,7 +244,6 @@ listItems.forEach((item) => {
   });
 });
 
-// Event to increase quantity of item
 chartContainer.addEventListener("click", async (e) => {
   if (e.target.classList.contains("fa-plus")) {
     const chartItem = e.target.parentElement.parentElement;
@@ -307,7 +261,6 @@ chartContainer.addEventListener("click", async (e) => {
   }
 });
 
-// Event to decrease the quantity of item, if the quantity is 1, will remove the item from the chart
 chartContainer.addEventListener("click", async (e) => {
   if (e.target.classList.contains("fa-minus")) {
     const chartItem = e.target.parentElement.parentElement;
@@ -328,14 +281,12 @@ chartContainer.addEventListener("click", async (e) => {
       chartItem.remove();
       console.log("Item removido");
     }
-    // checkinf if there's no more items in the chart
     if (chartContainer.children.length === 0) {
       chartOffcanvas.classList.remove("active");
     }
   }
 });
 
-// Event to close the offcanvas if there's no more items in the chart
 chartOffcanvas.addEventListener("click", () => {
   if (chartContainer.children.length === 0) {
     chartOffcanvas.classList.remove("active");
